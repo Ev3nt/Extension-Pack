@@ -76,6 +76,7 @@ BOOL APIENTRY DllMain(HMODULE module, UINT reason, LPVOID reserved) {
 		DetachDetour(CreateMatrixPerspectiveFov, CreateMatrixPerspectiveFovCustom);
 		DetachDetour(BuildHPBars, BuildHPBarsCustom);
 		DetachDetour(SetJassState, SetJassStateCustom);
+		UnlockFPS(false);
 
 		DetourTransactionCommit();
 
