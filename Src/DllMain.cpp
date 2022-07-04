@@ -40,11 +40,11 @@ float GetFrameWidth(UINT frame);
 
 bool ValidVersion();
 
-extern "C" void UnlockFPS(BOOL state) {
+extern "C" void __stdcall UnlockFPS(BOOL state) {
 	state ? Patch(lockFps, { 0x90, 0x90, 0x90 }) : Patch(lockFps, { 0x83, 0xE0, 0xFB });
 }
 
-extern "C" void SetWidescreenFix(BOOL state) {
+extern "C" void __stdcall SetWidescreenFix(BOOL state) {
 	fixWideScreen = state != FALSE;
 }
 
@@ -65,7 +65,9 @@ BOOL APIENTRY DllMain(HMODULE module, UINT reason, LPVOID reserved) {
 
 		AttachDetour(CreateMatrixPerspectiveFov, CreateMatrixPerspectiveFovCustom);
 		AttachDetour(BuildHPBars, BuildHPBarsCustom);
-		AttachDetour(SetJassState, SetJassStateCustom);
+		//SetWidescreenFix(true); // - Should be commented to use in prod
+		//UnlockFPS(true);		// - Should be commented to use in prod
+		AttachDetour(SetJassState, SetJassStateCustom); // - Should be recommented to use in prod
 
 		DetourTransactionCommit();
 
@@ -75,7 +77,7 @@ BOOL APIENTRY DllMain(HMODULE module, UINT reason, LPVOID reserved) {
 
 		DetachDetour(CreateMatrixPerspectiveFov, CreateMatrixPerspectiveFovCustom);
 		DetachDetour(BuildHPBars, BuildHPBarsCustom);
-		DetachDetour(SetJassState, SetJassStateCustom);
+		DetachDetour(SetJassState, SetJassStateCustom); // - Should be recommented to use in prod
 		UnlockFPS(false);
 
 		DetourTransactionCommit();
